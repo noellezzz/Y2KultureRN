@@ -27,6 +27,7 @@ const User = ({ navigation }) => {
   // useEffect(() => {
   //   setUser(mockUser)
   // }, [])
+  console.log(user)
 
   return (
     <SafeAreaView

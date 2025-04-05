@@ -14,6 +14,8 @@ const orderSchema = new mongoose.Schema({
   id: Number,
   date: String,
   total: Number,
+  status: String,
+  deliveryAddress: String,
   items: [orderItemSchema],
 });
 

@@ -25,22 +25,13 @@ export default function App() {
     DefaultLightFont: require('./assets/fonts/champagne_limousines/champagne_limousines.ttf'),
   })
 
+  const test = async () => {
+    await initilizeDatabase()
+  }
+
   useEffect(() => {
     test()
   }, [])
-
-  const test = async () => {
-    // await initilizeDatabase()
-    // createCartItem({
-    //   dateAdded: new Date().toISOString(),
-    //   productId: 1,
-    //   quantity: 1,
-    //   selectedColor: 'red',
-    //   selectedSize: 'M',
-    // })
-    // getCartItems()
-    // clearCart()
-  }
 
   return (
     <Provider store={store}>

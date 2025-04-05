@@ -5,11 +5,11 @@ export const initilizeDatabase = async () => {
   try {
     const dbPath = `${FileSystem.documentDirectory}databaseName.db`
 
-    const dbInfo = await FileSystem.getInfoAsync(dbPath)
-    if (dbInfo.exists) {
-      await FileSystem.deleteAsync(dbPath)
-      console.log('Existing database deleted.')
-    }
+    // const dbInfo = await FileSystem.getInfoAsync(dbPath)
+    // if (dbInfo.exists) {
+    //   await FileSystem.deleteAsync(dbPath)
+    //   console.log('Existing database deleted.')
+    // }
 
     const db = await SQLite.openDatabaseAsync(dbPath)
     await db.execAsync(`PRAGMA journal_mode = WAL;`)

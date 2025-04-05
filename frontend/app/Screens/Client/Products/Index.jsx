@@ -69,7 +69,7 @@ const Index = ({ route, navigation }) => {
         quantity,
       }
       // console.log(formData)
-      await initilizeDatabase()
+      // await initilizeDatabase()
       console.log('Creating cart item:', formData)
       createCartItem(formData)
       // Uncomment and implement actual cart addition logic

@@ -58,6 +58,7 @@ export const updateUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Handle image update
     if (updates.image) {
       if (user.cloudinaryId) {
         await cloudinary.uploader.destroy(user.cloudinaryId);
@@ -71,7 +72,15 @@ export const updateUser = async (req, res) => {
       updates.cloudinaryId = uploadResponse.public_id;
     }
 
-    user = await User.findByIdAndUpdate(userId, updates, { new: true });
+    // Add new order if present
+    if (updates.newOrder) {
+      user.orders.push(updates.newOrder);
+      delete updates.newOrder; // prevent newOrder from interfering with top-level updates
+    }
+
+    // Apply other updates
+    Object.assign(user, updates);
+    await user.save();
 
     res.status(200).json({ message: "User updated successfully", user });
   } catch (error) {

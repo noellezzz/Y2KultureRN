@@ -22,10 +22,10 @@ import app from '../../Utils/firebaseConfig'
 import api from '../../Utils/axiosInstance'
 import { useDispatch } from 'react-redux'
 
-import { setUserData } from '../../States/Slice/userSlice'
+import { setUserData, updateUserData } from '../../States/Slice/userSlice'
 const Login = ({ navigation }) => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('marktest@gmail.com')
+  const [password, setPassword] = useState('secret123')
   const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch()
 
@@ -54,6 +54,7 @@ const Login = ({ navigation }) => {
       })
       console.log('User registered in backend:', response.data)
       dispatch(setUserData(response.data))
+      // dispatch(updateUserData(response.data.orders))
       navigation.navigate('ClientStack')
     } catch (error) {
       console.error('Login error:', error)
