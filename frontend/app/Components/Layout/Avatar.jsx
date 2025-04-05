@@ -1,13 +1,13 @@
 import { View, Text, Image } from 'react-native'
 import React from 'react'
 
-const Avatar = ({ image }) => {
+const Avatar = ({ image, width = 50, height = 50 }) => {
   return (
     <View
       style={{
         borderWidth: 2,
-        width: 50,
-        height: 50,
+        width: width,
+        height: height,
         borderRadius: '100%',
         overflow: 'hidden',
       }}

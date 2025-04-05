@@ -13,6 +13,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import Divider from '../../Components/Labels/Divider'
 import mockUser from '../../Data/UserInfo'
 import { useSelector } from 'react-redux'
+import Avatar from '../../Components/Layout/Avatar'
 
 const User = ({ navigation }) => {
   const user = useSelector(state => state.user.user)
@@ -46,7 +47,9 @@ const User = ({ navigation }) => {
           }}
         >
           {user?.image ? (
-            <Avatar image={user?.image} />
+            <View style={{ marginRight: 10 }}>
+              <Avatar height={80} width={80} image={{ uri: user?.image }} />
+            </View>
           ) : (
             <View
               style={{

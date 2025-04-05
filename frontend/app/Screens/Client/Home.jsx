@@ -63,7 +63,7 @@ const Home = ({ navigation }) => {
             }}
           >
             {user?.image ? (
-              <Avatar image={user?.image} />
+              <Avatar image={{ uri: user?.image }} />
             ) : (
               <View
                 style={{
