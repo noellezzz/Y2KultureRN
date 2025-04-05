@@ -11,8 +11,8 @@ import Dropdown from '../../../Components/Input/Dropdown'
 import ProductTypes from '../../../Data/ProductTypes'
 import ProductStatus from '../../../Data/ProductStatus'
 import ToggleButton from '../../../Components/Buttons/ToggleButton'
-import Products from '../../../Data/Products'
 import RowText from '../../../Components/Layout/RowText'
+import DeleteProduct from './Delete'
 import api from '../../../Utils/axiosInstance'
 
 const Dashboard = ({ navigation }) => {
@@ -21,6 +21,7 @@ const Dashboard = ({ navigation }) => {
   const [selectedView, setSelectedView] = useState('Standard View')
   const [selectedItem, setSelectedItem] = useState('')
   const [products, setProducts] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSelectedItem = i => {
     setSelectedItem(selectedItem === i ? '' : i)
@@ -35,18 +36,28 @@ const Dashboard = ({ navigation }) => {
 
   const fetchProducts = async () => {
     try {
+      setIsLoading(true)
       const response = await api.get('/products')
-      console.log('Products:', response.data)
       setProducts(response.data)
+      setIsLoading(false)
     } catch (error) {
       console.error('Error fetching products:', error)
+      setIsLoading(false)
     }
   }
 
   useEffect(() => {
-    console.log('dsa')
+    // Focus listener to refresh products when navigating back to this screen
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchProducts()
+    })
+
+    // Initial fetch
     fetchProducts()
-  }, [])
+
+    // Cleanup the listener on unmount
+    return unsubscribe
+  }, [navigation])
 
   return (
     <SafeAreaView
@@ -122,7 +133,18 @@ const Dashboard = ({ navigation }) => {
           />
         </View>
         <ScrollView style={{ marginVertical: 10 }}>
-          {filteredProducts.length === 0 && (
+          {isLoading ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingVertical: 50,
+              }}
+            >
+              <LgText text="Loading products..." style={{ color: 'gray' }} />
+            </View>
+          ) : filteredProducts.length === 0 ? (
             <View
               style={{
                 flex: 1,
@@ -133,45 +155,82 @@ const Dashboard = ({ navigation }) => {
             >
               <LgText text="No products found." style={{ color: 'gray' }} />
             </View>
+          ) : (
+            filteredProducts.map((product, index) => (
+              <View
+                key={index}
+                style={{
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  marginVertical: 5,
+                  padding: 10,
+                  borderBottomWidth: 1,
+                  borderColor: 'gray',
+                }}
+              >
+                <TouchableOpacity onPress={() => handleSelectedItem(index)}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View
+                      style={{
+                        width: 30,
+                        justifyContent: 'flex-start',
+                        alignItems: 'flex-start',
+                        alignSelf: 'flex-start',
+                      }}
+                    >
+                      <Ionicons name="caret-down" size={18} color="black" />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <RowText label="Name" name={product.name} />
+                      {selectedItem === index && (
+                        <View>
+                          <RowText label="Price" name={`$${product.price}`} />
+                          <RowText label="Type" name={product.type} />
+                          <RowText label="Status" name={product.status} />
+
+                          {/* Actions Row */}
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              marginTop: 10,
+                              justifyContent: 'flex-end',
+                            }}
+                          >
+                            <TouchableOpacity
+                              onPress={() =>
+                                navigation.navigate('EditProduct', {
+                                  productId: product._id,
+                                })
+                              }
+                              style={{
+                                backgroundColor: colors.quaternary,
+                                padding: 8,
+                                borderRadius: 5,
+                                marginRight: 10,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                              }}
+                            >
+                              <Feather name="edit" size={16} color="white" />
+                              <LgText
+                                text=" Edit"
+                                style={{ color: 'white', fontSize: 14 }}
+                              />
+                            </TouchableOpacity>
+
+                            <DeleteProduct
+                              productId={product._id}
+                              onDeleteSuccess={fetchProducts}
+                            />
+                          </View>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            ))
           )}
-          {filteredProducts.map((product, index) => (
-            <View
-              key={index}
-              style={{
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                marginVertical: 5,
-                padding: 10,
-                borderBottomWidth: 1,
-                borderColor: 'gray',
-              }}
-            >
-              <TouchableOpacity onPress={() => handleSelectedItem(index)}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <View
-                    style={{
-                      width: 30,
-                      justifyContent: 'flex-start',
-                      alignItems: 'flex-start',
-                      alignSelf: 'flex-start',
-                    }}
-                  >
-                    <Ionicons name="caret-down" size={18} color="black" />
-                  </View>
-                  <View>
-                    <RowText label="Name" name={product.name} />
-                    {selectedItem === index && (
-                      <View>
-                        <RowText label="Price" name={product.price} />
-                        <RowText label="Type" name={product.type} />
-                        <RowText label="Status" name={product.status} />
-                      </View>
-                    )}
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </View>
-          ))}
         </ScrollView>
       </View>
     </SafeAreaView>
