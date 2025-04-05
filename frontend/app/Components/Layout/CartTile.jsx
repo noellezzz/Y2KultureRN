@@ -8,6 +8,7 @@ const CartTile = ({
   price = '$9.99',
   count = 1,
   category = 'Formal Wear',
+  image,
 }) => {
   return (
     <View
@@ -29,10 +30,17 @@ const CartTile = ({
           borderRadius: 20,
         }}
       >
-        <Image
-          source={hanni}
-          style={{ height: '100%', width: '100%', resizeMode: 'cover' }}
-        />
+        {image ? (
+          <Image
+            source={{ uri: image }}
+            style={{ height: '100%', width: '100%', resizeMode: 'cover' }}
+          />
+        ) : (
+          <Image
+            source={hanni}
+            style={{ height: '100%', width: '100%', resizeMode: 'cover' }}
+          />
+        )}
       </View>
       <View
         style={{

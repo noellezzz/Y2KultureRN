@@ -1,5 +1,5 @@
 import { View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import colors from '../../styles/colors'
 import BottomNavigation from '../../Components/Buttons/BottomNavigation'
@@ -7,8 +7,24 @@ import LgText from '../../Components/Labels/LgText'
 import { default as Text } from '../../Components/Labels/CustomText'
 import Divider from '../../Components/Labels/Divider'
 import CartTile from '../../Components/Layout/CartTile'
+import { getCartItems } from '../../Database/Database'
 
 const Cart = ({ navigation }) => {
+  const [cartItems, setCartItems] = React.useState([])
+
+  const fetchCartItems = async () => {
+    try {
+      const items = await getCartItems()
+      setCartItems(items)
+      console.log('Fetched cart items:', items)
+    } catch (error) {
+      console.error('Error fetching cart items:', error)
+    }
+  }
+  useEffect(() => {
+    fetchCartItems()
+  }, [])
+
   return (
     <SafeAreaView
       style={{
@@ -25,9 +41,16 @@ const Cart = ({ navigation }) => {
           <Divider />
         </View>
         <View style={{ gap: 10 }}>
-          <CartTile />
-          <CartTile />
-          <CartTile />
+          {cartItems.map((item, index) => (
+            <CartTile
+              key={index}
+              text={item.product}
+              price={`$${item.price}`}
+              count={item.quantity}
+              category={item.category}
+              image={item.image}
+            />
+          ))}
         </View>
       </View>
 
