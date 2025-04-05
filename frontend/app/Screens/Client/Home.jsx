@@ -1,4 +1,10 @@
-import { Image, ScrollView, TextInput, View } from 'react-native'
+import {
+  Image,
+  ScrollView,
+  TextInput,
+  View,
+  TouchableOpacity,
+} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import colors from '../../styles/colors'
@@ -89,10 +95,24 @@ const Home = ({ navigation }) => {
             </View>
           </View>
           <View style={{ marginVertical: 10 }}>
-            <IconInput
-              icon={<AntDesign name="search1" size={24} color="black" />}
-              placeholder="Search"
-            />
+            <View style={{ marginVertical: 10 }}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Search')}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  zIndex: 1,
+                }}
+              />
+              <IconInput
+                icon={<AntDesign name="search1" size={24} color="black" />}
+                placeholder="Search"
+                editable={false}
+              />
+            </View>
           </View>
           <View style={{ marginVertical: 5 }}>
             <SectionTitle text="Categories" />

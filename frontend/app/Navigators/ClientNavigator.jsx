@@ -20,7 +20,11 @@ export default function ClientNavigator() {
       <Stack.Screen name="Layout" component={LayoutScreen} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Cart" component={Cart} />
-      <Stack.Screen name="Search" component={Search} />
+      <Stack.Screen
+        name="Search"
+        component={Search}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen name="User" component={User} />
       <Stack.Screen name="Product" component={Product} />
       <Stack.Screen name="EditUser" component={EditUser} />
