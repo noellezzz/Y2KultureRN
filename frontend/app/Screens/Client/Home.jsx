@@ -50,7 +50,7 @@ const Home = ({ navigation }) => {
 
   const filteredProducts = products.filter(product => {
     const matchesCategory = selectedCategory
-      ? product.category === selectedCategory
+      ? product.type === selectedCategory
       : true
     const matchesPrice =
       product.price >= priceRange.min && product.price <= priceRange.max
@@ -127,29 +127,29 @@ const Home = ({ navigation }) => {
             <SectionTitle text="Categories" />
             <View style={{ marginVertical: 3, flexDirection: 'row', gap: 5 }}>
               <IconButton
-                text="Casual"
+                text="Casual Wear"
                 color={
-                  selectedCategory === 'Casual'
+                  selectedCategory === 'Casual Wear'
                     ? colors.secondary
                     : colors.quinary
                 }
                 onPress={() => {
                   setSelectedCategory(
-                    selectedCategory === 'Casual' ? '' : 'Casual',
+                    selectedCategory === 'Casual Wear' ? '' : 'Casual Wear',
                   )
                 }}
                 icon={<Ionicons name="shirt" size={20} color="black" />}
               />
               <IconButton
-                text="Formal"
+                text="Formal Wear"
                 color={
-                  selectedCategory === 'Formal'
+                  selectedCategory === 'Formal Wear'
                     ? colors.secondary
                     : colors.quaternary
                 }
                 onPress={() => {
                   setSelectedCategory(
-                    selectedCategory === 'Formal' ? '' : 'Formal',
+                    selectedCategory === 'Formal Wear' ? '' : 'Formal Wear',
                   )
                 }}
                 icon={
@@ -163,15 +163,15 @@ const Home = ({ navigation }) => {
             </View>
             <View style={{ marginVertical: 3, flexDirection: 'row', gap: 5 }}>
               <IconButton
-                text="Sports"
+                text="Sportswear"
                 color={
-                  selectedCategory === 'Sports'
+                  selectedCategory === 'Sportswear'
                     ? colors.secondary
                     : colors.senary
                 }
                 onPress={() => {
                   setSelectedCategory(
-                    selectedCategory === 'Sports' ? '' : 'Sports',
+                    selectedCategory === 'Sportswear' ? '' : 'Sportswear',
                   )
                 }}
                 icon={
@@ -181,20 +181,6 @@ const Home = ({ navigation }) => {
                     color="black"
                   />
                 }
-              />
-              <IconButton
-                text="Others"
-                color={
-                  selectedCategory === 'Others'
-                    ? colors.secondary
-                    : colors.septary
-                }
-                onPress={() => {
-                  setSelectedCategory(
-                    selectedCategory === 'Others' ? '' : 'Others',
-                  )
-                }}
-                icon={<FontAwesome5 name="vest" size={20} color="black" />}
               />
             </View>
           </View>
@@ -267,6 +253,7 @@ const Home = ({ navigation }) => {
                   id={product._id}
                   title={product.name}
                   price={product.price}
+                  type={product.type}
                   image={product.image}
                   navigation={navigation}
                 />

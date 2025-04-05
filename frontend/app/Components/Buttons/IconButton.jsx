@@ -1,11 +1,13 @@
-import { View } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 import React from 'react'
 import colors from '../../styles/colors'
 import { default as Text } from '../Labels/CustomText'
 
-const IconButton = ({ text, icon, color }) => {
+const IconButton = ({ text, icon, color, onPress }) => {
   return (
-    <View
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.7}
       style={{
         padding: 15,
         backgroundColor: colors.white,
@@ -25,7 +27,7 @@ const IconButton = ({ text, icon, color }) => {
           borderWidth: 1,
           alignSelf: 'flex-start',
           left: 10,
-          borderRadius: '100%',
+          borderRadius: 15,
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: color || colors.primary,
@@ -34,7 +36,7 @@ const IconButton = ({ text, icon, color }) => {
         {icon}
       </View>
       <Text>{text}</Text>
-    </View>
+    </TouchableOpacity>
   )
 }
 
