@@ -30,12 +30,12 @@ ITCP239 Programming Language - Design and Implementation REACT Native Mobile app
 
 [x] quiz 3 apply REDUX on order, product, review/ratings function 15pts (incomplete only on products)
 
-[] unit 1 user interface (with drawer) design 20pts
+[x] unit 1 user interface (with drawer) design 20pts
 
 [] unit 2 node backend functions, jwt tokens stored on SQLite or expo secure store.
 [] notification push token saved on user model. update/remove stale tokens 20pts
 
-[] term test Lec
+term test Lec
 [] functional requirements 10pts
 [] program execution 10pts
 [] project contribution 10pts
