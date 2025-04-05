@@ -25,15 +25,15 @@ import model4 from '../../../assets/images/model4.jpg'
 import model5 from '../../../assets/images/model5.jpg'
 import model6 from '../../../assets/images/model6.jpg'
 import Avatar from '../../Components/Layout/Avatar'
-// import Products from '../../Data/Products'
+import Slider from '@react-native-community/slider'
 import api from '../../Utils/axiosInstance'
 import { useSelector } from 'react-redux'
 
 const Home = ({ navigation }) => {
   const [products, setProducts] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState('')
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 })
   const user = useSelector(state => state.user.user)
-
-  // console.log('User:', user)
 
   const fetchProducts = async () => {
     try {
@@ -47,6 +47,15 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     fetchProducts()
   }, [])
+
+  const filteredProducts = products.filter(product => {
+    const matchesCategory = selectedCategory
+      ? product.category === selectedCategory
+      : true
+    const matchesPrice =
+      product.price >= priceRange.min && product.price <= priceRange.max
+    return matchesCategory && matchesPrice
+  })
 
   return (
     <SafeAreaView
@@ -119,12 +128,30 @@ const Home = ({ navigation }) => {
             <View style={{ marginVertical: 3, flexDirection: 'row', gap: 5 }}>
               <IconButton
                 text="Casual"
-                color={colors.quinary}
+                color={
+                  selectedCategory === 'Casual'
+                    ? colors.secondary
+                    : colors.quinary
+                }
+                onPress={() => {
+                  setSelectedCategory(
+                    selectedCategory === 'Casual' ? '' : 'Casual',
+                  )
+                }}
                 icon={<Ionicons name="shirt" size={20} color="black" />}
               />
               <IconButton
                 text="Formal"
-                color={colors.quaternary}
+                color={
+                  selectedCategory === 'Formal'
+                    ? colors.secondary
+                    : colors.quaternary
+                }
+                onPress={() => {
+                  setSelectedCategory(
+                    selectedCategory === 'Formal' ? '' : 'Formal',
+                  )
+                }}
                 icon={
                   <MaterialCommunityIcons
                     name="shoe-formal"
@@ -136,8 +163,17 @@ const Home = ({ navigation }) => {
             </View>
             <View style={{ marginVertical: 3, flexDirection: 'row', gap: 5 }}>
               <IconButton
-                text="Casual"
-                color={colors.senary}
+                text="Sports"
+                color={
+                  selectedCategory === 'Sports'
+                    ? colors.secondary
+                    : colors.senary
+                }
+                onPress={() => {
+                  setSelectedCategory(
+                    selectedCategory === 'Sports' ? '' : 'Sports',
+                  )
+                }}
                 icon={
                   <MaterialIcons
                     name="sports-baseball"
@@ -148,11 +184,47 @@ const Home = ({ navigation }) => {
               />
               <IconButton
                 text="Others"
-                color={colors.septary}
+                color={
+                  selectedCategory === 'Others'
+                    ? colors.secondary
+                    : colors.septary
+                }
+                onPress={() => {
+                  setSelectedCategory(
+                    selectedCategory === 'Others' ? '' : 'Others',
+                  )
+                }}
                 icon={<FontAwesome5 name="vest" size={20} color="black" />}
               />
             </View>
           </View>
+
+          <View style={{ marginVertical: 10 }}>
+            <SectionTitle text="Price Range" />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <Text>Min: ₱{priceRange.min}</Text>
+              <Text>Max: ₱{priceRange.max}</Text>
+            </View>
+            <Slider
+              style={{ width: '100%', height: 40 }}
+              minimumValue={0}
+              maximumValue={1000}
+              step={10}
+              value={priceRange.max}
+              minimumTrackTintColor={colors.secondary}
+              maximumTrackTintColor={colors.quinary}
+              onSlidingComplete={value =>
+                setPriceRange({ ...priceRange, max: value })
+              }
+            />
+          </View>
+
           <View style={{ marginVertical: 5 }}>
             <SectionTitle text="Collections" />
             <ScrollView
@@ -189,7 +261,7 @@ const Home = ({ navigation }) => {
                 marginTop: 10,
               }}
             >
-              {products.map((product, index) => (
+              {filteredProducts.map((product, index) => (
                 <ProductTile
                   key={index}
                   id={product._id}

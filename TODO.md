@@ -20,9 +20,9 @@ ITCP239 Programming Language - Design and Implementation REACT Native Mobile app
 [] send a push notification after the update. 10pts
 [] click on the notification to view the order details 10pts
 
-[] quiz 1 search/filters 15pts
-[] search function. filter products/service search results by price range 10pts
-[] search function. filter products/service search results by category and price range 10pts
+[x] quiz 1 search/filters 15pts
+[x] search function. filter products/service search results by price range 10pts
+[x] search function. filter products/service search results by category and price range 10pts
 
 [] quiz 2 notifications
 [] send push notifications about product promotions/discount. 10pts
