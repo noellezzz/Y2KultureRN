@@ -5,6 +5,7 @@ import ProductsScreen from '../Navigators/ProductNavigation'
 import DashboardScreen from '../Screens/Admin/Dashboard'
 import SettingsScreen from '../Screens/Admin/Settings'
 import UsersScreen from '../Screens/Admin/Users'
+import OrdersScreen from '../Screens/Admin/Orders'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import colors from '../styles/colors'
 
@@ -41,6 +42,9 @@ export default function DrawerNavigator() {
             case 'Users':
               iconName = focused ? 'people' : 'people-outline'
               break
+            case 'Orders':
+              iconName = focused ? 'cart' : 'cart-outline'
+              break
             case 'Settings':
               iconName = focused ? 'settings' : 'settings-outline'
               break
@@ -56,6 +60,7 @@ export default function DrawerNavigator() {
       <Drawer.Screen name="Products" component={ProductsScreen} />
       <Drawer.Screen name="Analytics" component={AnalyticsScreen} />
       <Drawer.Screen name="Users" component={UsersScreen} />
+      <Drawer.Screen name="Orders" component={OrdersScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
     </Drawer.Navigator>
   )

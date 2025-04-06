@@ -102,3 +102,65 @@ export const getUserById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getAllOrders = async (req, res) => {
+  try {
+    const users = await User.find({});
+    
+    // Extract orders from all users and flatten into a single array
+    const allOrders = users.reduce((orders, user) => {
+      // Add user info to each order for reference
+      const userOrders = user.orders.map(order => ({
+        ...order.toObject(),
+        userInfo: {
+          userId: user._id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email
+        }
+      }));
+      
+      return [...orders, ...userOrders];
+    }, []);
+
+    res.status(200).json({ orders: allOrders });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateOrderStatus = async (req, res) => {
+  try {
+    const { userId, orderId } = req.params;
+    const { status } = req.body;
+    
+    // Validate status
+    const validStatuses = ["Pending", "Processing", "Shipped", "Delivered", "Canceled"];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
+    
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    // Find the order
+    const orderIndex = user.orders.findIndex(order => order._id.toString() === orderId);
+    if (orderIndex === -1) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    
+    // Update the status
+    user.orders[orderIndex].status = status;
+    await user.save();
+    
+    res.status(200).json({ 
+      message: "Order status updated successfully",
+      order: user.orders[orderIndex]
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
