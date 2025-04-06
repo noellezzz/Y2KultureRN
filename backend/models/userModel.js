@@ -2,12 +2,13 @@ import mongoose from "mongoose";
 
 const orderItemSchema = new mongoose.Schema({
   id: Number,
-  name: String,
+  product: String,
   category: String,
   price: Number,
   quantity: Number,
   color: String,
   size: String,
+  image: String,
 });
 
 const orderSchema = new mongoose.Schema({

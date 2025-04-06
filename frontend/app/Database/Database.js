@@ -96,7 +96,7 @@ export const clearCart = async () => {
     const db = await SQLite.openDatabaseAsync(dbPath)
     await db.execAsync(`PRAGMA journal_mode = WAL;`)
     await db.execAsync(`DELETE FROM cart;`)
-    console.log('All rows deleted from the test table.')
+    console.log('All rows deleted from the cart table.')
   } catch (e) {
     console.error('Error clearing cart:', e)
     throw e

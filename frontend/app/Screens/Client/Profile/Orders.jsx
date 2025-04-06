@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux'
 
 const Orders = ({ navigation }) => {
   const user = useSelector(state => state.user.user)
-  console.log(user)
+  console.log(user.orders[2].items)
   return (
     <SafeAreaView
       style={{
@@ -35,9 +35,12 @@ const Orders = ({ navigation }) => {
               <View style={{ gap: 10 }}>
                 {order.items.map((item, key2) => (
                   <CartTile
+                    image={item?.image}
                     key={(key + 1) * 10 + key2}
-                    text={item?.name}
+                    text={item?.product}
+                    variant={item?.size + ' ' + item?.color}
                     category={item?.category}
+                    price={`$${item?.price}`}
                   />
                 ))}
               </View>

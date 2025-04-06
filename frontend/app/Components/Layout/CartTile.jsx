@@ -8,6 +8,7 @@ const CartTile = ({
   price = '$9.99',
   count = 1,
   category = 'Formal Wear',
+  variant = 'L Red',
   image,
 }) => {
   return (
@@ -50,7 +51,9 @@ const CartTile = ({
         }}
       >
         <View>
-          <Text style={{ fontSize: 18 }}>{text}</Text>
+          <Text style={{ fontSize: 18 }}>
+            {text} - {variant}
+          </Text>
           <Text style={{ fontSize: 14 }}>{category}</Text>
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
