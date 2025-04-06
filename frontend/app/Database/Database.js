@@ -12,7 +12,7 @@ export const initilizeDatabase = async () => {
     // }
 
     const db = await SQLite.openDatabaseAsync(dbPath)
-    await db.execAsync(`PRAGMA journal_mode = WAL;`)
+    // await db.execAsync(`PRAGMA journal_mode = WAL;`)
     await db.execAsync(`
         CREATE TABLE IF NOT EXISTS cart (
             dateAdded TEXT DEFAULT (datetime('now')),
@@ -79,7 +79,7 @@ export const getCartItems = async () => {
   try {
     const dbPath = `${FileSystem.documentDirectory}databaseName.db`
     const db = await SQLite.openDatabaseAsync(dbPath)
-    await db.execAsync(`PRAGMA journal_mode = WAL;`)
+    // await db.execAsync(`PRAGMA journal_mode = WAL;`)
     const result = await db.getAllAsync('SELECT * FROM cart')
     console.log(result)
     // console.log('Records selected successfully.')
@@ -94,9 +94,9 @@ export const clearCart = async () => {
   try {
     const dbPath = `${FileSystem.documentDirectory}databaseName.db`
     const db = await SQLite.openDatabaseAsync(dbPath)
-    await db.execAsync(`PRAGMA journal_mode = WAL;`)
+    // await db.execAsync(`PRAGMA journal_mode = WAL;`)
     await db.execAsync(`DELETE FROM cart;`)
-    console.log('All rows deleted from the test table.')
+    console.log('All rows deleted from the cart table.')
   } catch (e) {
     console.error('Error clearing cart:', e)
     throw e

@@ -24,7 +24,7 @@ import { useDispatch } from 'react-redux'
 
 import { setUserData, updateUserData } from '../../States/Slice/userSlice'
 const Login = ({ navigation }) => {
-  const [email, setEmail] = useState('marktest@gmail.com')
+  const [email, setEmail] = useState('tm2@gmail.com')
   const [password, setPassword] = useState('secret123')
   const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch()
