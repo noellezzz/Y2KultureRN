@@ -1,5 +1,5 @@
-import { ScrollView, View } from 'react-native'
-import React from 'react'
+import { ScrollView, View, TouchableOpacity } from 'react-native'
+import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import colors from '../../../styles/colors'
 import BottomNavigation from '../../../Components/Buttons/BottomNavigation'
@@ -7,12 +7,27 @@ import LgText from '../../../Components/Labels/LgText'
 import { default as Text } from '../../../Components/Labels/CustomText'
 import Divider from '../../../Components/Labels/Divider'
 import CartTile from '../../../Components/Layout/CartTile'
-import mockUser from '../../../Data/UserInfo'
 import { useSelector } from 'react-redux'
+
+const statusColors = {
+  Pending: '#f39c12',
+  Processing: '#3498db',
+  Shipped: '#9b59b6',
+  Delivered: '#27ae60',
+  Cancelled: '#e74c3c',
+}
+
+const statusOptions = ['All', 'Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled']
 
 const Orders = ({ navigation }) => {
   const user = useSelector(state => state.user.user)
-  // console.log(user.orders[2].items)
+  const [selectedStatus, setSelectedStatus] = useState('All')
+
+  const filteredOrders =
+    selectedStatus === 'All'
+      ? user?.orders
+      : user?.orders?.filter(order => order.status === selectedStatus)
+
   return (
     <SafeAreaView
       style={{
@@ -25,13 +40,48 @@ const Orders = ({ navigation }) => {
       <ScrollView>
         <View style={{ width: '100%', padding: 10, flex: 1 }}>
           <LgText>Orders</LgText>
-          <Text style={{ fontSize: 12 }}>2 Items</Text>
-          <View style={{ marginVertical: 10 }}>
-            <Divider />
-          </View>
-          {user?.orders?.map((order, key) => (
-            <View key={order._id}>
-              <Text style={{ marginVertical: 10 }}>Order No. {order._id}</Text>
+          <Text style={{ fontSize: 12 }}>{filteredOrders?.length || 0} Items</Text>
+
+          {/* Filter Buttons */}
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginVertical: 10 }}>
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              {statusOptions.map(status => (
+                <TouchableOpacity
+                  key={status}
+                  onPress={() => setSelectedStatus(status)}
+                  style={{
+                    paddingHorizontal: 12,
+                    paddingVertical: 6,
+                    borderRadius: 20,
+                    backgroundColor:
+                      selectedStatus === status ? colors.secondary : '#ccc',
+                  }}
+                >
+                  <Text style={{ color: selectedStatus === status ? '#fff' : '#000' }}>
+                    {status}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
+
+          <Divider />
+
+          {/* Order List */}
+          {filteredOrders?.map((order, key) => (
+            <View key={order._id} style={{ marginBottom: 20 }}>
+              <Text style={{ marginVertical: 10, fontWeight: 'bold' }}>
+                Order No. {order._id}
+              </Text>
+              <Text
+                style={{
+                  marginBottom: 10,
+                  color: statusColors[order.status] || 'gray',
+                  fontWeight: '600',
+                }}
+              >
+                Status: {order.status}
+              </Text>
               <View style={{ gap: 10 }}>
                 {order.items.map((item, key2) => (
                   <CartTile

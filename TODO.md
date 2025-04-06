@@ -1,41 +1,45 @@
-## ITCP239 Programming Language - Design and Implementation REACT Native Mobile app
+# ITCP239 Programming Language - Design and Implementation REACT Native Mobile app
 
-[x] mp1 Product/service CRUD 20 pts
-[x] Product/service CRUD. upload a photo or use a camera.
+## MP1: Product/service CRUD (20 pts)
+- [x] Product/service CRUD. upload a photo or use a camera.
 
-[ ] mp2 User functions 20pts
-[x] user login/registration, update user profile. upload or take a photo. 15pts
-[ ] google/facebook login, 20pts
+## MP2: User functions (20pts)
+- [x] User login/registration, update user profile. Upload or take a photo. (15pts)
+- [ ] Google/Facebook login (20pts)
 
-[ ] mp3 Review Ratings 20 pts
-[ ] users can leave a review/rating on verified purchased products/services.
-[ ] users can update their own reviews/ratings.
+## MP3: Review Ratings (20 pts)
+- [ ] Users can leave a review/rating on verified purchased products/services.
+- [ ] Users can update their own reviews/ratings.
 
-[ ] mp4 save cart contents on asyncsorage or secure storage before checkout. get items when app is opened. delete contents after checkout. 12pts
-[x] save cart contents on SQLite before checkout. get items when app is opened delete contents after checkout. 20
+## MP4: Cart Storage (20 pts)
+- [ ] Save cart contents on AsyncStorage or secure storage before checkout. Get items when app is opened. Delete contents after checkout. (12pts)
+- [x] Save cart contents on SQLite before checkout. Get items when app is opened delete contents after checkout. (20pts)
 
-[ ] term test transaction 35pts
-[x] completed transaction. 10pts
-[ ] update status of transaction. 5pts
-[ ] send a push notification after the update. 10pts
-[ ] click on the notification to view the order details 10pts
+## Term Test: Transaction (35pts)
+- [x] Completed transaction. (10pts)
+- [x] Update status of transaction. (5pts)
+- [ ] Send a push notification after the update. (10pts)
+- [ ] Click on the notification to view the order details (10pts)
 
-[x] quiz 1 search/filters 15pts
-[x] search function. filter products/service search results by price range 10pts
-[x] search function. filter products/service search results by category and price range 10pts
+## Quiz 1: Search/Filters (15pts)
+- [x] Search function. Filter products/service search results by price range (10pts)
+- [x] Search function. Filter products/service search results by category and price range (10pts)
 
-[ ] quiz 2 notifications
-[ ] send push notifications about product promotions/discount. 10pts
-[ ] view the details of the notification. 5pts
+## Quiz 2: Notifications
+- [ ] Send push notifications about product promotions/discount. (10pts)
+- [ ] View the details of the notification. (5pts)
 
-[x] quiz 3 apply REDUX on order, product, review/ratings function 15pts (incomplete only on products)
+## Quiz 3: Redux (15pts)
+- [x] Apply REDUX on order, product, review/ratings function (incomplete, only on products)
 
-[x] unit 1 user interface (with drawer) design 20pts
+## Unit 1: User Interface Design (20pts)
+- [x] User interface (with drawer) design
 
-[ ] unit 2 node backend functions, jwt tokens stored on SQLite or expo secure store.
-[ ] notification push token saved on user model. update/remove stale tokens 20pts
+## Unit 2: Backend Functions (20pts)
+- [ ] Node backend functions, JWT tokens stored on SQLite or expo secure store.
+- [ ] Notification push token saved on user model. Update/remove stale tokens
 
-term test Lec
-[ ] functional requirements 10pts
-[ ] program execution 10pts
-[ ] project contribution 10pts
+## Term Test Lec
+- [ ] Functional requirements (10pts)
+- [ ] Program execution (10pts)
+- [ ] Project contribution (10pts)
