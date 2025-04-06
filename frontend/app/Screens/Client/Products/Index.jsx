@@ -3,26 +3,28 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  Alert,
 } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { default as Text } from '../../../Components/Labels/CustomText'
 import colors from '../../../styles/colors'
 import AntDesign from '@expo/vector-icons/AntDesign'
-// import Productss from '../../../Data/Products'
 import LgText from '../../../Components/Labels/LgText'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import PrimeButton from '../../../Components/Buttons/PrimeButton'
 import api from '../../../Utils/axiosInstance'
+import { createCartItem, initilizeDatabase } from '../../../Database/Database'
+// import { getAll } from '../../../Database/database'
 
 const Index = ({ route, navigation }) => {
   const { id } = route.params || {}
-  // const product = Products.find(product => product.id === id)
   const [products, setProducts] = useState({})
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedSize, setSelectedSize] = useState(null)
   const [selectedColor, setSelectedColor] = useState(null)
+  const [quantity, setQuantity] = useState(1)
 
   const fetchProducts = async () => {
     try {
@@ -35,9 +37,76 @@ const Index = ({ route, navigation }) => {
     }
   }
 
+  const handleAddToCart = async () => {
+    try {
+      // Validate selections before adding to cart
+      if (!selectedSize || !selectedColor) {
+        Alert.alert('Selection Required', 'Please select size and color')
+        return
+      }
+
+      // Find the specific stock item
+      const selectedStockItem = products.stock.find(
+        item => item.color === selectedColor && item.size === selectedSize,
+      )
+
+      // Check if stock is available
+      if (!selectedStockItem || selectedStockItem.quantity < quantity) {
+        Alert.alert(
+          'Insufficient Stock',
+          `Only ${selectedStockItem?.quantity || 0} items available in this size and color`,
+        )
+        return
+      }
+
+      const formData = {
+        productId: products._id,
+        product: products.name,
+        price: products.price,
+        image: products.image,
+        selectedSize,
+        selectedColor,
+        quantity,
+      }
+      // console.log(formData)
+      // await initilizeDatabase()
+      console.log('Creating cart item:', formData)
+      createCartItem(formData)
+      // Uncomment and implement actual cart addition logic
+      // await api.post('/cart', formData)
+      navigation.navigate('Cart')
+    } catch (e) {
+      console.log('Error adding to cart:', e)
+      Alert.alert('Error', 'Could not add item to cart')
+    }
+  }
+
+  const incrementQuantity = () => {
+    const selectedStockItem = products.stock.find(
+      item => item.color === selectedColor && item.size === selectedSize,
+    )
+
+    if (selectedStockItem && quantity < selectedStockItem.quantity) {
+      setQuantity(prev => prev + 1)
+    } else {
+      Alert.alert(
+        'Maximum Stock Reached',
+        'Cannot add more than available stock',
+      )
+    }
+  }
+
+  const decrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(prev => prev - 1)
+    }
+  }
+
   useEffect(() => {
     console.log('Product ID:', id)
     fetchProducts()
+
+    // console.log(getAll())
   }, [])
 
   return (
@@ -201,6 +270,7 @@ const Index = ({ route, navigation }) => {
           styles={{ backgroundColor: 'white' }}
         />
       </View>
+
       {modalOpen && (
         <View
           style={{
@@ -228,7 +298,7 @@ const Index = ({ route, navigation }) => {
           <View
             style={{
               width: '100%',
-              height: 300,
+              height: 380, // Increased height to accommodate quantity controls
               position: 'absolute',
               bottom: 0,
               left: 0,
@@ -238,11 +308,27 @@ const Index = ({ route, navigation }) => {
             }}
           >
             <LgText text="Add to Cart?" />
+            <Text>
+              {selectedColor && selectedSize
+                ? 'In Stock: ' +
+                  (products.stock.find(
+                    item =>
+                      item.color === selectedColor &&
+                      item.size === selectedSize,
+                  )?.quantity ?? 'Out of Stock')
+                : 'Select Color and Size'}
+            </Text>
+
+            {/* Size Selection */}
             <View style={{ flexDirection: 'row', gap: 10, marginVertical: 10 }}>
               {products?.stock?.map((stock, index) => (
                 <TouchableOpacity
                   key={index}
-                  onPress={() => setSelectedSize(stock.size)}
+                  onPress={() => {
+                    setSelectedSize(stock.size)
+                    // Reset quantity when size changes
+                    setQuantity(1)
+                  }}
                 >
                   <View
                     style={{
@@ -261,11 +347,17 @@ const Index = ({ route, navigation }) => {
                 </TouchableOpacity>
               ))}
             </View>
+
+            {/* Color Selection */}
             <View style={{ flexDirection: 'row', gap: 10, marginBottom: 10 }}>
               {products?.stock?.map((stock, index) => (
                 <TouchableOpacity
                   key={index}
-                  onPress={() => setSelectedColor(stock.color)}
+                  onPress={() => {
+                    setSelectedColor(stock.color)
+                    // Reset quantity when color changes
+                    setQuantity(1)
+                  }}
                 >
                   <View
                     style={{
@@ -284,12 +376,53 @@ const Index = ({ route, navigation }) => {
                 </TouchableOpacity>
               ))}
             </View>
+
+            {/* Quantity Control */}
+            {selectedColor && selectedSize && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: 10,
+                }}
+              >
+                <TouchableOpacity onPress={decrementQuantity}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      padding: 10,
+                      borderWidth: 1,
+                      borderRadius: 10,
+                    }}
+                  >
+                    <Text>-</Text>
+                  </View>
+                </TouchableOpacity>
+                <Text style={{ marginHorizontal: 20, fontSize: 18 }}>
+                  {quantity}
+                </Text>
+                <TouchableOpacity onPress={incrementQuantity}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      padding: 10,
+                      borderWidth: 1,
+                      borderRadius: 10,
+                    }}
+                  >
+                    <Text>+</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {/* Add to Cart Buttons */}
             <View style={{ flexDirection: 'row', gap: 10 }}>
               <PrimeButton
                 text="Yes"
                 onPress={() => {
-                  setModalOpen(false)
-                  navigation.navigate('Cart')
+                  handleAddToCart()
                 }}
               />
               <PrimeButton
