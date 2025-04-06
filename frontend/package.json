@@ -11,6 +11,7 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.24.0",
     "@react-native-community/cli": "^18.0.0",
+    "@react-native-community/datetimepicker": "^8.3.0",
     "@react-native-community/slider": "^4.5.6",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/drawer": "^7.1.1",
@@ -21,10 +22,13 @@
     "expo": "~52.0.31",
     "expo-asset": "~11.0.5",
     "expo-camera": "~16.0.18",
+    "expo-constants": "~17.0.8",
+    "expo-device": "~7.0.3",
     "expo-file-system": "~18.0.12",
     "expo-font": "~13.0.4",
     "expo-image-picker": "~16.0.6",
     "expo-navigation-bar": "~4.0.8",
+    "expo-notifications": "~0.29.14",
     "expo-router": "^4.0.19",
     "expo-secure-store": "^14.0.1",
     "expo-sqlite": "~15.1.4",
@@ -48,9 +52,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@types/react": "~18.3.12",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",
-    "prettier": "^3.4.2"
+    "prettier": "^3.4.2",
+    "typescript": "^5.3.3"
   },
   "private": true
 }

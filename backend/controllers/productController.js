@@ -105,3 +105,97 @@ export const deleteProduct = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+export const addPromotion = async (req, res) => {
+  try {
+    const { name, description, percentOff, dateEnd, status } = req.body;
+    const productId = req.params.id;
+
+    // Input validation
+    if (!name || !description || !percentOff || !dateEnd) {
+      return res.status(400).json({
+        message:
+          "All promotion fields are required: name, description, percentOff, dateEnd",
+      });
+    }
+
+    // Validate percentOff is a number between 0 and 100
+    const discount = Number(percentOff);
+    if (isNaN(discount) || discount < 0 || discount > 100) {
+      return res.status(400).json({
+        message: "Percent off must be a number between 0 and 100",
+      });
+    }
+
+    // Validate dateEnd is a valid future date
+    const endDate = new Date(dateEnd);
+    if (isNaN(endDate.getTime()) || endDate <= new Date()) {
+      return res.status(400).json({
+        message: "End date must be a valid future date",
+      });
+    }
+
+    // Find the product
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Create the promotion
+    product.promo = {
+      name,
+      description,
+      percentOff: discount,
+      dateCreated: new Date(),
+      dateEnd: endDate,
+      status: status || "inactive",
+    };
+
+    // Save the updated product
+    await product.save();
+
+    // Send push notification
+    try {
+      const pushToken = "ExponentPushToken[hk6sDSESSQet47CWRBfgq1]";
+
+      const notificationMessage = {
+        to: pushToken,
+        sound: "default",
+        title: "New Promotion Added",
+        body: `${name}: ${percentOff}% off on ${product.name}`,
+        data: {
+          productId: product._id.toString(),
+          promoName: name,
+          percentOff: discount,
+          type: "PRODUCT_DETAILS",
+          screen: "(tabs)/products",
+        },
+      };
+
+      const sendNotification = async (message) => {
+        await fetch("https://exp.host/--/api/v2/push/send", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Accept-encoding": "gzip, deflate",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(message),
+        });
+      };
+
+      await sendNotification(notificationMessage);
+      console.log("Push notification sent for new promotion");
+    } catch (notificationError) {
+      console.error("Error sending push notification:", notificationError);
+      // Continue with the response even if notification fails
+    }
+
+    res.status(200).json({
+      message: "Promotion added successfully",
+      product,
+    });
+  } catch (error) {
+    console.error("Error adding promotion:", error);
+    res.status(500).json({ message: error.message });
+  }
+};

@@ -16,6 +16,16 @@ import {
   getCartItems,
   initilizeDatabase,
 } from './app/Database/Database'
+import { NotificationProvider } from './app/Context/NotificationContext'
+import * as Notifications from 'expo-notifications'
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+})
 
 const Stack = createStackNavigator()
 
@@ -34,18 +44,20 @@ export default function App() {
   }, [])
 
   return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{ headerShown: false }}
-          initialRouteName="Welcome"
-        >
-          <Stack.Screen name="ClientStack" component={ClientStack} />
-          <Stack.Screen name="AdminDrawer" component={AdminDrawer} />
-          <Stack.Screen name="AuthNavigation" component={AuthNavigation} />
-          <Stack.Screen name="Welcome" component={Welcome} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </Provider>
+    <NotificationProvider>
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{ headerShown: false }}
+            initialRouteName="Welcome"
+          >
+            <Stack.Screen name="ClientStack" component={ClientStack} />
+            <Stack.Screen name="AdminDrawer" component={AdminDrawer} />
+            <Stack.Screen name="AuthNavigation" component={AuthNavigation} />
+            <Stack.Screen name="Welcome" component={Welcome} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
+    </NotificationProvider>
   )
 }

@@ -106,20 +106,20 @@ export const getUserById = async (req, res) => {
 export const getAllOrders = async (req, res) => {
   try {
     const users = await User.find({});
-    
+
     // Extract orders from all users and flatten into a single array
     const allOrders = users.reduce((orders, user) => {
       // Add user info to each order for reference
-      const userOrders = user.orders.map(order => ({
+      const userOrders = user.orders.map((order) => ({
         ...order.toObject(),
         userInfo: {
           userId: user._id,
           firstName: user.firstName,
           lastName: user.lastName,
-          email: user.email
-        }
+          email: user.email,
+        },
       }));
-      
+
       return [...orders, ...userOrders];
     }, []);
 
@@ -133,32 +133,80 @@ export const updateOrderStatus = async (req, res) => {
   try {
     const { userId, orderId } = req.params;
     const { status } = req.body;
-    
+
     // Validate status
-    const validStatuses = ["Pending", "Processing", "Shipped", "Delivered", "Canceled"];
+    const validStatuses = [
+      "Pending",
+      "Processing",
+      "Shipped",
+      "Delivered",
+      "Canceled",
+    ];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({ message: "Invalid status value" });
     }
-    
+
     // Find the user
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    
+
     // Find the order
-    const orderIndex = user.orders.findIndex(order => order._id.toString() === orderId);
+    const orderIndex = user.orders.findIndex(
+      (order) => order._id.toString() === orderId
+    );
     if (orderIndex === -1) {
       return res.status(404).json({ message: "Order not found" });
     }
-    
+
+    // Store the previous status for notification comparison
+    const oldStatus = user.orders[orderIndex].status;
+
     // Update the status
     user.orders[orderIndex].status = status;
     await user.save();
-    
-    res.status(200).json({ 
+
+    // Send push notification
+    try {
+      const pushToken = "ExponentPushToken[hk6sDSESSQet47CWRBfgq1]";
+
+      const notificationMessage = {
+        to: pushToken,
+        sound: "default",
+        title: "Order Status Update",
+        body: `Your order has been updated from ${oldStatus} to ${status}`,
+        data: {
+          orderId: orderId,
+          newStatus: status,
+          type: "ORDER_DETAILS",
+          screen: "(tabs)/orders",
+          userId: user._id,
+        },
+      };
+
+      const sendNotification = async (message) => {
+        await fetch("https://exp.host/--/api/v2/push/send", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Accept-encoding": "gzip, deflate",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(message),
+        });
+      };
+
+      await sendNotification(notificationMessage);
+      console.log("Push notification sent for order status update");
+    } catch (notificationError) {
+      console.error("Error sending push notification:", notificationError);
+      // Continue with the response even if notification fails
+    }
+
+    res.status(200).json({
       message: "Order status updated successfully",
-      order: user.orders[orderIndex]
+      order: user.orders[orderIndex],
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
