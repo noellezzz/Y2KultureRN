@@ -33,6 +33,39 @@ const stockSchema = new mongoose.Schema({
   quantity: Number,
 });
 
+const promoSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  description: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  percentOff: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 100,
+  },
+  dateCreated: {
+    type: Date,
+    default: Date.now,
+  },
+  dateEnd: {
+    type: Date,
+    required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: ["active", "inactive", "scheduled", "expired"],
+    default: "inactive",
+  },
+});
+
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
@@ -44,6 +77,7 @@ const productSchema = new mongoose.Schema({
   cloudinaryId: { type: String, default: null },
   stock: [stockSchema],
   reviews: [reviewSchema],
+  promo: promoSchema,
 });
 
 // Add a method to calculate average rating
@@ -55,6 +89,15 @@ productSchema.methods.calculateAverageRating = function () {
     0
   );
   return Math.round((totalRating / this.reviews.length) * 10) / 10;
+};
+
+// Add a method to calculate discounted price based on active promotion
+productSchema.methods.getDiscountedPrice = function () {
+  if (this.promo && this.promo.status === "active") {
+    const discount = this.price * (this.promo.percentOff / 100);
+    return Math.round((this.price - discount) * 100) / 100;
+  }
+  return this.price;
 };
 
 export default mongoose.model("Product", productSchema);

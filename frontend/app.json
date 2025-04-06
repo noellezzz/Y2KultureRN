@@ -13,22 +13,29 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.noelle.y2kulture"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.noelle.y2kulture",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-font",
-      "expo-router",
-      "expo-sqlite",
-      "expo-asset"
-    ]
+    "plugins": ["expo-font", "expo-router", "expo-sqlite", "expo-asset"],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "e8246a51-bcc6-471d-9853-1f5353217058"
+      }
+    },
+    "owner": "mcodog"
   }
 }
