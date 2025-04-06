@@ -52,6 +52,7 @@ const Cart = ({ navigation }) => {
       })
       console.log(response.data)
       dispatch(updateUserData(response.data.user))
+      await initilizeDatabase()
       clearCart()
       navigation.navigate('Orders')
     } catch (e) {

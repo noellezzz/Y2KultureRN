@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux'
 
 const Orders = ({ navigation }) => {
   const user = useSelector(state => state.user.user)
-  console.log(user.orders[2].items)
+  // console.log(user.orders[2].items)
   return (
     <SafeAreaView
       style={{
