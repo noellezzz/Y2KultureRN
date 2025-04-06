@@ -93,6 +93,7 @@ const Orders = ({ navigation }) => {
                     variant={item?.size + ' ' + item?.color}
                     category={item?.category}
                     price={`₱${item?.price}`}
+                    count={item?.quantity}
                   />
                 ))}
               </View>

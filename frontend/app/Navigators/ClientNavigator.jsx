@@ -9,6 +9,7 @@ import Product from '../Screens/Client/Products/Index'
 import EditUser from '../Screens/Client/Profile/Edit'
 import Orders from '../Screens/Client/Profile/Orders'
 import OrderDetails from '../Screens/Client/Profile/OrderDetails'
+import RateScreen from '../Screens/Client/Profile/Reviews'
 
 const Stack = createStackNavigator()
 
@@ -27,6 +28,7 @@ export default function ClientNavigator() {
       <Stack.Screen name="EditUser" component={EditUser} />
       <Stack.Screen name="Orders" component={Orders} />
       <Stack.Screen name="OrderDetails" component={OrderDetails} />
+      <Stack.Screen name="Reviews" component={RateScreen} /> 
     </Stack.Navigator>
   )
 }

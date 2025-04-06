@@ -6,6 +6,8 @@ import colors from '../../../styles/colors'
 import LgText from '../../../Components/Labels/LgText'
 import Divider from '../../../Components/Labels/Divider'
 import CartTile from '../../../Components/Layout/CartTile'
+import { Ionicons } from '@expo/vector-icons'
+import { useSelector } from 'react-redux'
 
 const statusColors = {
   Pending: '#f39c12',
@@ -17,6 +19,19 @@ const statusColors = {
 
 const OrderDetails = ({ route, navigation }) => {
   const { order } = route.params
+  const { user } = useSelector((state) => state.user)
+
+  const renderStars = (rating) => {
+    return [...Array(5)].map((_, index) => (
+      <Ionicons
+        key={index}
+        name={index < rating ? 'star' : 'star-outline'}
+        size={24}
+        color="#f1c40f"
+        style={{ marginRight: 4 }}
+      />
+    ))
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.primary }}>
@@ -27,17 +42,59 @@ const OrderDetails = ({ route, navigation }) => {
         </View>
 
         <Divider />
-
-        <View style={{  marginVertical: 5 }}>
+        
+        <View style={{ marginVertical: 5 }}>
           {order.items.map((item, index) => (
-            <View key={index} style={{ borderRadius: 10, padding: 10}}>
-              <CartTile
-                image={item?.image}
-                text={item?.product}
-                variant={`${item?.size} ${item?.color}`}
-                category={item?.category}
-                price={`₱${item?.price}`}
-              />
+            <View key={index} style={{ borderRadius: 10, padding: 10 }}>
+              <View style={{ position: 'relative' }}>
+                {/* Check if the current user has reviewed the product */}
+                {order.status === 'Delivered' && (!item.reviews || !Array.isArray(item.reviews) || !item.reviews.find(review => review.user === user._id)) && (
+                  <TouchableOpacity
+                    style={{
+                      position: 'absolute',
+                      top: 10,
+                      right: 10,
+                      zIndex: 1,
+                      backgroundColor: 'green',
+                      paddingVertical: 4,
+                      paddingHorizontal: 8,
+                      borderRadius: 20,
+                    }}
+                    onPress={() => navigation.navigate('Reviews', { item, orderId: order._id })} 
+                  >
+                    <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#fff' }}>Rate Product</Text>
+                  </TouchableOpacity>
+                )}
+
+                {/* Display the rating stars if the user has reviewed */}
+                {item.reviews && Array.isArray(item.reviews) && item.reviews.find(review => review.user === user._id) && (
+                  <View
+                    style={{
+                      position: 'absolute',
+                      top: 10,
+                      right: 10,
+                      zIndex: 1,
+                      backgroundColor: '#f39c12',
+                      paddingVertical: 4,
+                      paddingHorizontal: 8,
+                      borderRadius: 20,
+                    }}
+                  >
+                    <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#fff' }}>
+                      {renderStars(item.reviews.find(review => review.user === user._id).rating)}
+                    </Text>
+                  </View>
+                )}
+
+                <CartTile
+                  image={item?.image}
+                  text={item?.product}
+                  variant={`${item?.size} ${item?.color}`}
+                  category={item?.category}
+                  price={`₱${item?.price}`}
+                  count={item?.quantity}
+                />
+              </View>
             </View>
           ))}
         </View>
@@ -56,26 +113,6 @@ const OrderDetails = ({ route, navigation }) => {
             Total: ₱{order.total}
           </Text>
         </View>
-
-        {order.status === 'Delivered' && (
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Review', { order })}
-            style={{
-              backgroundColor: colors.secondary,
-              paddingVertical: 12,
-              borderRadius: 10,
-              alignItems: 'center',
-              marginTop: 20,
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.3,
-              shadowRadius: 5,
-              elevation: 5,
-            }}
-          >
-            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Leave a Review</Text>
-          </TouchableOpacity>
-        )}
       </ScrollView>
     </SafeAreaView>
   )
