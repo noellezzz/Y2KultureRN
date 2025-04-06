@@ -31,6 +31,7 @@ const Cart = ({ navigation }) => {
       console.error('Error fetching cart items:', error)
     }
   }
+  
   useEffect(() => {
     fetchCartItems()
   }, [])
@@ -72,27 +73,48 @@ const Cart = ({ navigation }) => {
       <View style={{ width: '100%', padding: 10, flex: 1 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <LgText>Shopping Cart</LgText>
-          <TouchableOpacity onPress={() => handleCheckout()}>
-            <Text>Checkout</Text>
-          </TouchableOpacity>
+          {cartItems.length > 0 && (
+            <TouchableOpacity onPress={() => handleCheckout()}>
+              <Text>Checkout</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
-        <Text style={{ fontSize: 12 }}>{cartItems?.length} Items</Text>
+        <Text style={{ fontSize: 12 }}>{cartItems.length} Items</Text>
+
         <View style={{ marginVertical: 10 }}>
           <Divider />
         </View>
-        <View style={{ gap: 10 }}>
-          {cartItems.map((item, index) => (
-            <CartTile
-              key={index}
-              text={item.product}
-              price={`$${item.price}`}
-              count={item.quantity}
-              category={item.category}
-              image={item.image}
-            />
-          ))}
-        </View>
+
+        {cartItems.length === 0 ? (
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ marginVertical: 20 }}>No items in cart</Text>
+            <TouchableOpacity
+              style={{
+                backgroundColor: colors.secondary,
+                paddingVertical: 10,
+                paddingHorizontal: 20,
+                borderRadius: 5,
+              }}
+              onPress={() => navigation.navigate('Home')}
+            >
+              <Text style={{ color: '#fff' }}>Continue Shopping</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={{ gap: 10 }}>
+            {cartItems.map((item, index) => (
+              <CartTile
+                key={index}
+                text={item.product}
+                price={`$${item.price}`}
+                count={item.quantity}
+                category={item.category}
+                image={item.image}
+              />
+            ))}
+          </View>
+        )}
       </View>
 
       <BottomNavigation navigation={navigation} />
