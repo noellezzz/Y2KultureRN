@@ -18,8 +18,11 @@ import Floater from '../../Components/Buttons/Floater'
 import colors from '../../styles/colors'
 
 import api from '../../Utils/axiosInstance'
+import { useNotification } from '../../Context/NotificationContext'
 
 const CreatePromotion = ({ navigation }) => {
+  const { expoPushToken } = useNotification()
+
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [percentOff, setPercentOff] = useState('')
@@ -171,6 +174,7 @@ const CreatePromotion = ({ navigation }) => {
         percentOff: Number(percentOff),
         dateEnd: dateEnd ? dateEnd.toISOString() : new Date().toISOString(),
         status,
+        expoPushToken,
       })
 
       Alert.alert('Success', 'Promotion created successfully', [

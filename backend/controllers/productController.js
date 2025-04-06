@@ -107,7 +107,8 @@ export const deleteProduct = async (req, res) => {
 };
 export const addPromotion = async (req, res) => {
   try {
-    const { name, description, percentOff, dateEnd, status } = req.body;
+    const { name, description, percentOff, dateEnd, status, expoPushToken } =
+      req.body;
     const productId = req.params.id;
 
     // Input validation
@@ -155,7 +156,7 @@ export const addPromotion = async (req, res) => {
 
     // Send push notification
     try {
-      const pushToken = "ExponentPushToken[hk6sDSESSQet47CWRBfgq1]";
+      const pushToken = expoPushToken || product.expoPushToken;
 
       const notificationMessage = {
         to: pushToken,

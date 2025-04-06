@@ -19,6 +19,7 @@ import Dropdown from '../../Components/Input/Dropdown'
 import ToggleButton from '../../Components/Buttons/ToggleButton'
 import RowText from '../../Components/Layout/RowText'
 import Divider from '../../Components/Labels/Divider'
+import { useNotification } from '../../Context/NotificationContext'
 
 const Orders = ({ navigation }) => {
   const [allOrders, setAllOrders] = useState([])
@@ -36,6 +37,8 @@ const Orders = ({ navigation }) => {
   const [selectedView, setSelectedView] = useState('Standard View')
   const [selectedItem, setSelectedItem] = useState('')
   const [filterStatus, setFilterStatus] = useState('')
+
+  const { expoPushToken } = useNotification()
 
   const handleSelectedItem = i => {
     setSelectedItem(selectedItem === i ? '' : i)
@@ -71,6 +74,7 @@ const Orders = ({ navigation }) => {
       setUpdatingStatus(true)
       await api.put(`/auth/${userId}/orders/${orderId}/status`, {
         status: newStatus,
+        expoPushToken,
       })
       // Refresh the orders list
       await fetchAllOrders()

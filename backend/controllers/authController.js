@@ -132,7 +132,7 @@ export const getAllOrders = async (req, res) => {
 export const updateOrderStatus = async (req, res) => {
   try {
     const { userId, orderId } = req.params;
-    const { status } = req.body;
+    const { status, expoPushToken } = req.body;
 
     // Validate status
     const validStatuses = [
@@ -169,7 +169,7 @@ export const updateOrderStatus = async (req, res) => {
 
     // Send push notification
     try {
-      const pushToken = "ExponentPushToken[hk6sDSESSQet47CWRBfgq1]";
+      const pushToken = expoPushToken || user.expoPushToken;
 
       const notificationMessage = {
         to: pushToken,
