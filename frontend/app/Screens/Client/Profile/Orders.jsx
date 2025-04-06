@@ -42,7 +42,6 @@ const Orders = ({ navigation }) => {
           <LgText>Orders</LgText>
           <Text style={{ fontSize: 12 }}>{filteredOrders?.length || 0} Items</Text>
 
-          {/* Filter Buttons */}
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginVertical: 10 }}>
             <View style={{ flexDirection: 'row', gap: 10 }}>
               {statusOptions.map(status => (
@@ -67,9 +66,12 @@ const Orders = ({ navigation }) => {
 
           <Divider />
 
-          {/* Order List */}
           {filteredOrders?.map((order, key) => (
-            <View key={order._id} style={{ marginBottom: 20 }}>
+            <TouchableOpacity
+              key={order._id}
+              onPress={() => navigation.navigate('OrderDetails', { order })}
+              style={{ marginBottom: 20 }}
+            >
               <Text style={{ marginVertical: 10, fontWeight: 'bold' }}>
                 Order No. {order._id}
               </Text>
@@ -90,11 +92,11 @@ const Orders = ({ navigation }) => {
                     text={item?.product}
                     variant={item?.size + ' ' + item?.color}
                     category={item?.category}
-                    price={`$${item?.price}`}
+                    price={`₱${item?.price}`}
                   />
                 ))}
               </View>
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
